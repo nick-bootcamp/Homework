@@ -108,6 +108,15 @@ print(interestRate)
 
 // CHECK: Print greeting and maskedAccount. Verify output matches expectations.
 
+let firstName = "Jane" 
+let lastName = "Smith"
+let fullName = "\(firstName) \(lastName)"
+let greeting = "Welcome to PNC Mobile, \(firstName) \(lastName). Your account is active."
+let accountNumber = "1234567890" 
+let maskedAccount = "****\(accountNumber.suffix(4))"
+print(fullName.count)
+print(greeting)
+print(maskedAccount)
 
 
 // ============================================================
@@ -127,7 +136,7 @@ let transactionCount = 47          // Int
 let transactionTotal = 12_309.88   // Double
 
 // Try this line — it won't compile. Read the error.
-// let average = transactionTotal / transactionCount
+let averageTransaction = transactionTotal / Double(transactionCount)
 
 // TODO 3b: Fix it by converting transactionCount to Double inline.
 // Store the result in a constant named averageTransaction.
@@ -138,12 +147,21 @@ let transactionTotal = 12_309.88   // Double
 // Use String(format: "%.2f", averageTransaction) to format the Double.
 // Store it in a constant named summary and print it.
 
+let summary = "\(transactionCount) transactions averaging $\(String(format: "%.2f", averageTransaction)) each"
+print(summary)
+
 
 // TODO 3d: Swift optionals — preview
 // This is a common pattern. String-to-Int conversion returns an
 // OPTIONAL because the string might not be a valid number.
 let rawInput = "2500"
 let parsedAmount = Int(rawInput)   // This is Int?, not Int
+
+if let amt = parsedAmount{
+    print("Parsed Amount: \(amt)")
+}else{
+    print("Invalid input")
+}
 
 // TODO: Use if let to safely unwrap parsedAmount and print:
 // "Parsed amount: 2500"
@@ -169,6 +187,15 @@ let balance: Double = 8_500.00
 //   balance > 1_000   → print "Standard account"
 //   otherwise         → print "Low balance alert"
 
+if balance > 25_000 {
+    print("Private Banking eligible")
+} else if balance > 10_000 {
+    print("Preferred client")
+} else if balance > 1_000 {
+    print("Standard account")
+} else{
+    print("Low balance alert")
+}
 
 // TODO 4b: Switch with pattern matching
 // Swift switch can match ranges — far more powerful than Python/JS
@@ -181,7 +208,20 @@ let creditScore = 714
 //   580...669  → "Fair"
 //   default    → "Poor"
 // Print "Credit rating: [result]"
+switch creditScore {
+    case 800...850:
+        print("Exceptional")
+    case 740...799: 
+        print("Very Good")
+    case 670...739: 
+        print("Good")
+    case 580...669: 
+        print("Fair")
+    default: 
+        print("Poor")
+    
 
+}
 
 // TODO 4c: Switch on an "enum"
 // For now, use a String:
@@ -194,6 +234,16 @@ let transactionType = "transfer"
 //   default      → "Unknown transaction type: \(transactionType)"
 // Print the result.
 
+switch transactionType{
+    case "deposit":
+        print("Processing deposit")
+    case "withdrawal":
+        print("Processing withdrawl")
+    case "transfer":
+        print("Processing transfer")
+    default:
+        print("Uknown transaction type: \(transactionType)")
+}
 
 // TODO 4d: Guard statement
 // guard is Swift's early-exit pattern. It is the idiomatic way to
@@ -205,7 +255,12 @@ let transactionType = "transfer"
 func processWithdrawal(amount: Double, availableBalance: Double) -> String {
     // TODO: Add a guard statement that returns "Invalid amount"
     // if amount is less than or equal to zero.
-
+    guard amount > 0 else{
+        return "Invalid amount"
+    }
+    guard amount <= availableBalance else{
+        return "Insufficent funds. Available: $\(String(format: "%.2f",availableBalance))"
+    }
     // TODO: Add a second guard that returns
     // "Insufficient funds. Available: $X.XX"
     // if amount exceeds availableBalance.
@@ -232,11 +287,16 @@ print(processWithdrawal(amount: 500, availableBalance: 1000))       // Approved
 // Print the multiplication table for 7: "7 x 1 = 7" through "7 x 10 = 70"
 // Use a closed range: 1...10
 
+for i in 1...10{
+    print("7 x \(i) = \(7*i)")
+}
 
 // TODO 5b: for-in with where clause (built-in filter)
 // Print only the even numbers from 1 through 20.
 // Use: for num in 1...20 where num % 2 == 0
-
+for i in 1...20 where i % 2 == 0{
+    print(i)
+}
 
 // TODO 5c: Array basics
 // Declare an array of account names:
@@ -245,7 +305,10 @@ print(processWithdrawal(amount: 500, availableBalance: 1000))       // Approved
 // "• Checking"
 // "• Savings"
 // etc.
-
+let accountNames = ["Checking", "Savings", "Investment", "Credit Card"]
+for i in accountNames{
+    print("* \(i)") // i dont know how to do bullet on MacinCloud
+}
 
 // TODO 5d: Array with enumerated()
 // Using the same array, print each item with its position number:
@@ -255,6 +318,9 @@ print(processWithdrawal(amount: 500, availableBalance: 1000))       // Approved
 // Hint: for (index, name) in accounts.enumerated()
 // Note: enumerated() starts at 0 — add 1 to the index when printing.
 
+for (index, name) in accountNames.enumerated(){
+    print("\(index + 1). \(name)")
+}
 
 // TODO 5e: while loop
 // Simulate a connection retry loop.
@@ -264,6 +330,16 @@ print(processWithdrawal(amount: 500, availableBalance: 1000))       // Approved
 //   - print "Connection attempt \(attempts)..."
 //   - if attempts == 3, set connected = true and print "Connected."
 
+var attempts = 0
+var connected = false
+while !connected && attempts < 3{
+    attempts += 1
+    print("Connection attempt \(attempts)...")
+    if attempts == 3{
+        connected = true
+        print("Connected")
+    }
+}
 
 // ============================================================
 // REVIEW QUESTIONS
