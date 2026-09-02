@@ -98,6 +98,80 @@ print(t2.isPending)
 // Use classes for: managers, services, view controllers — things
 // that have IDENTITY and LIFECYCLE, not just data.
 // ============================================================
+class BankAccount{
+    let id: String
+    let accountNumber: String
+    var balance: Double
+    let owner: String
+
+    init(id: String, accountNumber: String, balance: Double = 0.0, owner: String){
+        self.id = id
+        self.accountNumber = accountNumber
+        self.balance = balance
+        self.owner = owner
+    }
+    func deposit(amount: Double){
+        guard amount > 0 else{
+            print("invalid amount")
+            return
+        }
+        balance += amount
+        return
+    }
+    func withdraw(amount: Double) -> Bool{
+        guard amount > 0 && amount <= balance else{
+            var success = false
+            return success
+        }
+        balance -= amount
+        var success = true
+        return success
+    }
+    func printSummary(){
+        print("Account \(accountNumber) | Owner: \(owner) | Balance: \(String(format: "$%.2f", balance))")
+    }
+}
+var checking = BankAccount(id: "acc_001", accountNumber: "1234567890", balance: 1_000, owner: "Jane Smith")
+var savings = BankAccount(id: "acc_002", accountNumber: "0987654321", balance: 5_000, owner: "Jane Smith")
+checking.deposit(amount: 200.00)
+checking.withdraw(amount: 50.00)
+checking.printSummary()
+savings.printSummary()
+var checkingRef = checking
+checkingRef.deposit(amount: 500)
+print(checking.balance)
+print(checkingRef.balance)
+class PremiumBankAccount: BankAccount{
+    var overdraftLimit: Double
+    init(id: String, accountNumber: String, balance: Double, owner: String, overdraftLimit: Double){
+        self.overdraftLimit = overdraftLimit
+    
+        super.init(
+            id: id, 
+            accountNumber: accountNumber,
+            balance: balance,
+            owner: owner
+        )
+    }
+    convenience init(id: String, accountNumber: String, owner: String, overdraftLimit: Double){
+        self.init(id: id, accountNumber: accountNumber, balance: 0.0, owner: owner, overdraftLimit: overdraftLimit)
+    }
+    override func withdraw(amount: Double) -> Bool{
+        guard amount > 0 && amount <= balance + overdraftLimit else{
+            var success = false
+            return success
+        }
+        balance -= amount
+        var success = true
+        return success
+    }
+}
+var premium = PremiumBankAccount(id: "acc_003", accountNumber: "2345678901", balance: 100, owner: "Jane Smith", overdraftLimit: 500)
+premium.withdraw(amount: 400)
+print(premium.balance)
+premium.withdraw(amount: 800)
+print(premium.balance)
+// - value shows overdraft and no shange shows guard caught the seconf withdraw
 
 // TODO 4a: Define a class named BankAccount with:
 //   Stored properties:
@@ -128,6 +202,9 @@ print(t2.isPending)
 // Observe they are THE SAME object — both show the updated balance.
 // Write a comment explaining why this is different from the struct in 3c.
 
+//This is differnt because stucthas value properties and a class has reference 
+// properties, things in a reference are pointing at an object that can change 
+// a value does not change a new one must be made.
 
 // TODO 4d: Inheritance
 // Define a class PremiumBankAccount that inherits from BankAccount.
@@ -164,6 +241,50 @@ print(t2.isPending)
 //   debit    → "Debit"
 //   transfer → "Transfer"
 //   fee      → "Fee"
+
+enum TransactionType: String, CaseIterable{
+    case credit 
+    case debit
+    case transfer
+    case fee
+    var displayName: String{
+        switch self{
+            case .credit:
+                return "Credit"
+            case .debit:
+                return "Debit"
+            case .transfer:
+                return "Transfer"
+            case .fee:
+                return "Fee"
+        }
+    }
+}
+enum AccountError{
+    case insufficientFunds(available: Double, requested: Double )
+    case accountInactive
+    case dailyLimitExceeded(limit: Double)
+    case invalidAmount
+}
+func describeError(_ error: AccountError) -> String{
+        switch error{
+            case .insufficientFunds(let available, let requested):
+            return "Insufficent Funds. Available: $\(available), Requested: $\(requested)."
+            case .accountInactive:
+            return "You're account is inactive."
+            case .dailyLimitExceeded(let limit):
+            return "Exceeded daily limit of $\(limit)."
+            case .invalidAmount:
+            return "Amount entered is invalid"
+        }
+    }
+print(describeError( .insufficientFunds(available: 100.0, requested: 200.0)))
+print(describeError( .accountInactive))
+print(describeError( .dailyLimitExceeded(limit: 100.0)))
+print(describeError( .invalidAmount))
+for type in TransactionType.allCases {
+    print(type.rawValue)
+}
 
 
 // TODO 5c: Enum with associated values
