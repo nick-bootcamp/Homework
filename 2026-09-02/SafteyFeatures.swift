@@ -641,7 +641,7 @@ func findLargest<T: Comparable>(_ array: [T]) -> T? {
 }
 
 
-print(findLargest([]) ?? "Array is empty")
+print(findLargest([1, 7, 3, 9, 2]) ?? "Array is empty")
 print(findLargest([1.5, 7.2, 3.8, 9.1, 2.4]) ?? 0)
 print(findLargest(["Apple", "Banana", "Orange"]) ?? "Array is empty")
 
