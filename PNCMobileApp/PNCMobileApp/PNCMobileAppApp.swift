@@ -41,17 +41,6 @@ struct RootView: View {
     @EnvironmentObject private var session: SessionManager
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text("PNC Mobile")
-                .font(.largeTitle.bold())
-            Text("Environment: \(AppEnvironment.label)")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            if session.isSessionExpired {
-                Text("Session expired — please log in again")
-                    .foregroundStyle(.red)
-            }
-        }
-        .padding()
+        ContentView()
     }
 }
